@@ -67,9 +67,15 @@ export const searchUser = async (req, res) => {
    
     try {
         const { userName } = req.params
-        const user = await User.findOne({username: userName})
+        const user = await User.findOne({ userName })
+    
+        if (!user) {
+          return res.status(404).json({ message: 'User not found' })
+        }
+    
         res.status(200).json(user)
-    } catch {
-        res.status(404).json({message: err.message})
-    }
+      } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Server error' })
+      }
 }
