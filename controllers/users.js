@@ -71,6 +71,8 @@ export const searchUser = async (req, res) => {
         const users = await User.find({
           $or: [
             { userName: regex },
+            { firstName: regex },
+            { lastName: regex },
           ]
         })
         res.json(users)
