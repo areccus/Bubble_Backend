@@ -67,7 +67,7 @@ export const searchUser = async (req, res) => {
    
     try {
         const { userName } = req.params
-        const user = await User.findOne(userName)
+        const user = await User.findOne({username: userName})
         res.status(200).json(user)
     } catch {
         res.status(404).json({message: err.message})
