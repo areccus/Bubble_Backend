@@ -64,16 +64,12 @@ export const addRemoveFriend = async (req, res) => {
 }
 
 export const searchUser = async (req, res) => {
-    const { userName } = req.params
-
-  try {
-    const user = await User.findOne(userName)
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' })
+   
+    try {
+        const { userName } = req.params
+        const user = await User.findOne(userName)
+        res.status(200).json(user)
+    } catch {
+        res.status(404).json({message: err.message})
     }
-    res.status(200).json(user)
-  } catch (err) {
-    res.status(500).json({ message: err.message })
-  }
 }
