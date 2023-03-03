@@ -66,14 +66,14 @@ export const addRemoveFriend = async (req, res) => {
 export const searchUser = async (req, res) => {
    
     try {
-        const { userName } = req.params
-        const user = await User.findOne({ userName })
-    
-        if (!user) {
-          return res.status(404).json({ message: 'User not found' })
-        }
-    
-        res.status(200).json(user)
+        const { search } = req.query
+        const regex = new RegExp(search, 'i')
+        const users = await User.find({
+          $or: [
+            { userName: regex },
+          ]
+        })
+        res.json(users)
       } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'Server error' })
