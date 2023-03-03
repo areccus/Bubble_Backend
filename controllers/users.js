@@ -66,8 +66,8 @@ export const addRemoveFriend = async (req, res) => {
 export const searchUser = async (req, res) => {
    
     try {
-        const { search } = req.query
-        const regex = new RegExp(search, 'i')
+        const { query } = req.params
+        const regex = new RegExp(query, 'i')
         const users = await User.find({
           $or: [
             { userName: regex },
