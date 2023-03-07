@@ -1,15 +1,11 @@
 import express from 'express'
 import { verifyToken } from '../middleware/auth.js'
-import {getUser} from '../controllers/users.js'
-import { getMessage, createMessage, getMessagedUsers, createGroupChat } from '../controllers/messages.js'
-
+import {createChatroom, sendChatroomMessage} from '../controllers/messages'
 const router = express.Router()
 
 router.get('/', verifyToken)
-router.get('/messages', getMessage)
-router.get("/messages/messagedUsers/:userId", getMessagedUsers)
+router.get('/chatroom/create', verifyToken, createChatroom)
 
-router.post('/messages', createMessage)
-router.post("/groupChats", createGroupChat);
+router.post('/chatroom/create', verifyToken, createChatroom)
 
 export default router
