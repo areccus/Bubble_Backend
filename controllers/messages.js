@@ -41,3 +41,27 @@ export const getMessage = async (req, res) => {
     return res.json(messages);
   });
 };
+
+  // Create group chat
+  export const createGroupChat = async (memberUsernames, groupName) => {
+    try {
+      // Find user documents by their usernames
+      const members = await Promise.all(memberUsernames.map(username => User.findOne({ userName: username })));
+      const memberIds = members.map(member => member._id);
+  
+      // Create new group chat
+      const newGroupChat = new GroupChat({
+        members: memberIds,
+        name: groupName,
+        messages: []
+      });
+  
+      await newGroupChat.save();
+  
+      return newGroupChat;
+    } catch (error) {
+      console.error(error);
+      throw new Error('An error occurred while creating the group chat.');
+    }
+  };
+
