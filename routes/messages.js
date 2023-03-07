@@ -8,6 +8,6 @@ const router = express.Router()
 router.get('/', verifyToken)
 router.get('/messages', getMessage)
 
-router.post('/send-message', createMessage)
+router.post('/messages', createMessage)
 
 export default router
