@@ -6,6 +6,6 @@ const router = express.Router()
 router.get('/', verifyToken)
 router.post('/chatrooms', verifyToken, createChatroom)
 
-router.post('/chatrooms/:chatroomId/messages', verifyToken, sendChatroomMessage)
+// router.post('/chatrooms/:chatroomId/messages', verifyToken, sendChatroomMessage)
 
 export default router
