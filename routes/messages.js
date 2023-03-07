@@ -4,8 +4,8 @@ import {createChatroom, sendChatroomMessage} from '../controllers/messages'
 const router = express.Router()
 
 router.get('/', verifyToken)
-router.get('/chatroom/create', verifyToken, createChatroom)
+router.post('/chatrooms', verifyToken, createChatroom)
 
-router.post('/chatroom/create', verifyToken, createChatroom)
+router.post('/chatrooms/:chatroomId/messages', verifyToken, sendChatroomMessage)
 
 export default router
