@@ -7,7 +7,9 @@ const router = express.Router()
 
 router.get('/', verifyToken)
 router.get('/messages', getMessage)
+router.get("/messages/messagedUsers/:userId", getMessagedUsers)
 
 router.post('/messages', createMessage)
+router.post("/groupChats", createGroupChat);
 
 export default router

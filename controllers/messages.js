@@ -42,4 +42,37 @@ export const getMessage = async (req, res) => {
   })
 }
 
+export const getMessagedUsers = async (req, res) => {
+  try {
+    const { userId } = req.params
+    const messages = await Message.find({ $or: [{ sender: userId }, { recipient: userId }] })
+    const usernames = [...new Set(messages.map((message) => message.sender === userId ? message.recipient : message.sender))]
+    res.json(usernames)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: "Failed to get messaged users." })
+  }
+}
 
+  // Create group chat
+  export const createGroupChat = async (memberUsernames, groupName) => {
+    try {
+      // Find user documents by their usernames
+      const members = await Promise.all(memberUsernames.map(username => User.findOne({ userName: username })))
+      const memberIds = members.map(member => member._id)
+  
+      // Create new group chat
+      const newGroupChat = new GroupChat({
+        members: memberIds,
+        name: groupName,
+        messages: []
+      })
+  
+      await newGroupChat.save()
+  
+      return newGroupChat
+    } catch (error) {
+      console.error(error)
+      throw new Error('An error occurred while creating the group chat.')
+    }
+  }
