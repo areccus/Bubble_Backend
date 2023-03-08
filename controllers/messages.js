@@ -1,74 +1,76 @@
 import Chatroom from "../models/chatroom.js"
-import Message from "../models/message.js"
+import User from "../models/User.js"
 
 // Create a new chatroom
-export const createChatroom = async (req, res) => {
+export const createChatroom = async (req, res, next) => {
   const { name, description, members } = req.body
 
   try {
-    // Create a new chatroom document
     const newChatroom = new Chatroom({
       name,
       description,
-      members,
+      members: [],
+      messages: [],
     })
 
-    // Save the new chatroom to the database
+    // Add members to the chatroom
+    for (const memberId of members) {
+      const user = await User.findById(memberId)
+      if (!user) {
+        throw new Error(`User with ID ${memberId} not found`)
+      }
+      newChatroom.members.push({
+        userId: user._id.toString(), // Replace with your custom ID
+        username: user.username,
+      })
+    }
+
     await newChatroom.save()
 
     res.status(201).json(newChatroom)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: "Failed to create chatroom" })
+    next(error)
   }
 }
 
-export const sendChatroomMessage = async (req, res) => {
+export const sendChatroomMessage = async (req, res, next) => {
   const { chatroomId, sender, message } = req.body
 
   try {
-    // Create a new message document
-    const newMessage = new Message({
+    const chatroom = await Chatroom.findById(chatroomId)
+
+    if (!chatroom) {
+      throw new Error(`Chatroom with ID ${chatroomId} not found`)
+    }
+
+    const newMessage = {
+      userId: req.user._id.toString(), // Replace with your custom ID
       sender,
       message,
-    })
+    }
 
-    // Save the new message to the database
-    await newMessage.save()
-
-    // Add the new message to the chatroom's message array
-    const chatroom = await Chatroom.findByIdAndUpdate(
-      chatroomId,
-      {
-        $push: { messages: newMessage._id },
-      },
-      { new: true }
-    )
+    chatroom.messages.push(newMessage)
+    await chatroom.save()
 
     res.status(201).json(chatroom)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: "Failed to send message" })
+    next(error)
   }
 }
 
 // Get a chatroom by ID
-export const getChatroom = async (req, res) => {
-  const { chatroomId } = req.params
+export const getChatroom = async (req, res, next) => {
+  const chatroomId = req.params.id
 
   try {
-    // Find the chatroom document by ID and populate the members and messages arrays
     const chatroom = await Chatroom.findById(chatroomId)
-      .populate("members", "username")
-      .populate("messages", "sender message createdAt")
 
     if (!chatroom) {
-      return res.status(404).json({ message: "Chatroom not found" })
+      throw new Error(`Chatroom with ID ${chatroomId} not found`)
     }
 
-    res.status(200).json(chatroom)
+    res.json(chatroom)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: "Failed to get chatroom" })
+    next(error)
   }
 }

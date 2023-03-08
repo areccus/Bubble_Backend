@@ -6,20 +6,39 @@ const ChatroomSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    description: {
-      type: String,
-      required: true,
-    },
-    members: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "User",
-      required: true,
-    },
-    messages: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "Message",
-      default: [],
-    },
+    members: [
+        {
+            userId: {
+            type: String,
+            required: true
+            },
+            userName: {
+                type: String,
+                required: true
+            }
+        }
+    ],
+    messages: [
+        {
+            userId: {
+              type: String,
+              required: true,
+              ref: "User",
+            },
+            sender: {
+              type: String,
+              required: true,
+            },
+            message: {
+              type: String,
+              required: true,
+            },
+            createdAt: {
+              type: Date,
+              default: Date.now,
+            },
+        }
+    ]
   },
   { timestamps: true }
 );
