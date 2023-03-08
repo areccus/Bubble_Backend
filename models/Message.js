@@ -1,25 +1,22 @@
 import mongoose from "mongoose"
-import User from "./User"
 
-const MesssageSchema = new mongoose.Schema(
+const MessageSchema = new mongoose.Schema(
   {
+    userId: {
+      type: String,
+      required: true
+    },
     sender: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      type: String,
       required: true
     },
-    receiver: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
-    },
-    message: {
+    recipient: {
       type: String,
       required: true
     }
   },
-    {timestamps: true}
+  {timestamps: true}
 )
 
-const Message = mongoose.model('Message', MesssageSchema)
+const Message = mongoose.model('Message', MessageSchema)
 export default Message
