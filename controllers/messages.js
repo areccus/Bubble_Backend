@@ -1,5 +1,6 @@
 import User from "../models/User.js"
 import Message from "../models/Message.js"
+import GroupChat from "../models/GroupChat.js"
 
 export const createMessage = async (req, res) => {
     const {userId, message} = req.body
