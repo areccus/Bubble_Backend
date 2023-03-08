@@ -1,78 +1,76 @@
+import Chatroom from "../models/chatroom.js"
 import User from "../models/User.js"
-import Message from "../models/Message.js"
 
-export const createMessage = async (req, res) => {
-    const {userId, message} = req.body
-    const user = await User.findById(userId)
-    const newMessage = new Message({
-        userId,
-        sender: user.userName,
-        recipient: user.userName,
-        message: message,
-        timestamp: new Date(),
-      })
+// Create a new chatroom
+export const createChatroom = async (req, res, next) => {
+  const { name, description, members } = req.body
 
-      newMessage.save((err, savedMessage) => {
-        if (err) {
-          console.error(err)
-          return res.status(500).json({ error: 'An error occurred while saving the message.' })
-        }
-    
-        return res.json(savedMessage)
-      })
-}
-
-export const getMessage = async (req, res) => {
-  const { sender, recipient } = req.query
-
-  const senderUser = await User.findOne({ userName: sender })
-  const recipientUser = await User.findOne({ userName: recipient })
-
-  if (!senderUser || !recipientUser) {
-    return res.status(404).json({ error: "User not found." })
-  }
-
-  Message.find({ userId: { $in: [senderUser._id, recipientUser._id] } }, (err, messages) => {
-    if (err) {
-      console.error(err)
-      return res.status(500).json({ error: "An error occurred while retrieving the messages." })
-    }
-
-    return res.json(messages)
-  })
-}
-
-export const getMessagedUsers = async (req, res) => {
   try {
-    const { userId } = req.params
-    const messages = await Message.find({ $or: [{ sender: userId }, { recipient: userId }] })
-    const usernames = [...new Set(messages.map((message) => message.sender === userId ? message.recipient : message.sender))]
-    res.json(usernames)
+    const newChatroom = new Chatroom({
+      name,
+      description,
+      members: [],
+      messages: [],
+    })
+
+    // Add members to the chatroom
+    for (const memberId of members) {
+      const user = await User.findById(memberId)
+      if (!user) {
+        throw new Error(`User with ID ${memberId} not found`)
+      }
+      newChatroom.members.push({
+        userId: user._id.toString(), // Replace with your custom ID
+        username: user.username,
+      })
+    }
+
+    await newChatroom.save()
+
+    res.status(201).json(newChatroom)
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ error: "Failed to get messaged users." })
+    next(error)
   }
 }
 
-  // Create group chat
-  export const createGroupChat = async (memberUsernames, groupName) => {
-    try {
-      // Find user documents by their usernames
-      const members = await Promise.all(memberUsernames.map(username => User.findOne({ userName: username })))
-      const memberIds = members.map(member => member._id)
-  
-      // Create new group chat
-      const newGroupChat = new GroupChat({
-        members: memberIds,
-        name: groupName,
-        messages: []
-      })
-  
-      await newGroupChat.save()
-  
-      return newGroupChat
-    } catch (error) {
-      console.error(error)
-      throw new Error('An error occurred while creating the group chat.')
-    }
-  }
+// export const sendChatroomMessage = async (req, res, next) => {
+//   const { chatroomId, sender, message } = req.body
+
+//   try {
+//     const chatroom = await Chatroom.findById(chatroomId)
+
+//     if (!chatroom) {
+//       throw new Error(`Chatroom with ID ${chatroomId} not found`)
+//     }
+
+//     const newMessage = {
+//       userId: req.user._id.toString(), // Replace with your custom ID
+//       sender,
+//       message,
+//     }
+
+//     chatroom.messages.push(newMessage)
+//     await chatroom.save()
+
+//     res.status(201).json(chatroom)
+//   } catch (error) {
+//     next(error)
+//   }
+// }
+
+// // Get a chatroom by ID
+// export const getChatroom = async (req, res, next) => {
+//   const chatroomId = req.params.id
+
+//   try {
+//     const chatroom = await Chatroom.findById(chatroomId)
+
+//     if (!chatroom) {
+//       throw new Error(`Chatroom with ID ${chatroomId} not found`)
+//     }
+
+//     res.json(chatroom)
+//   } catch (error) {
+//     next(error)
+//   }
+// }
