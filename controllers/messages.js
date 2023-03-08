@@ -3,12 +3,11 @@ import User from "../models/User.js"
 
 // Create a new chatroom
 export const createChatroom = async (req, res, next) => {
-  const { name, description, members } = req.body
+  const { name, members } = req.body
 
   try {
     const newChatroom = new Chatroom({
       name,
-      description,
       members: [],
       messages: [],
     })
