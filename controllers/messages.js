@@ -17,7 +17,7 @@ export const createChatroom = async (req, res, next) => {
     for (const memberId of members) {
       const user = await User.findById(memberId)
       if (!user) {
-        throw new Error(`User with ID ${memberId} not found`)
+        return res.status(400).json({ error: `User with ID ${memberId} not found` })
       }
       newChatroom.members.push({
         userId: user._id.toString(), // Replace with your custom ID
