@@ -21,6 +21,7 @@ import Message from './models/Message.js'
 import {users, posts} from './data/index.js'
 import { error } from 'console'
 import { messages } from './data/messageTest.js'
+import socketio from 'socket.io'
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url)
@@ -36,6 +37,17 @@ app.use(bodyParser.urlencoded({limit: '30mb', extended: true}))
 app.use(cors())
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')))
 
+const server = http.createServer(app)
+const io = socketio(server)
+
+io.on('connection', (socket) => {
+    console.log('a user connected')
+    // handle incoming socket events here
+  })
+
+  server.listen(PORT, () => {
+    console.log(`Server running Port: ${PORT}`)
+  })
 /* FILE STORAGE */
 const storage = multer.diskStorage({
     // Saves your files to this folder.
