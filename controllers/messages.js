@@ -30,16 +30,33 @@ export const getMessage = async (req, res) => {
   const recipientUser = await User.findOne({ userName: recipient })
 
   if (!senderUser || !recipientUser) {
-    return res.status(404).json({ error: "User not found." })
+      return res.status(404).json({ error: "User not found." })
   }
 
-  Message.find({ userId: { $in: [senderUser._id, recipientUser._id] } }, (err, messages) => {
-    if (err) {
-      console.error(err)
-      return res.status(500).json({ error: "An error occurred while retrieving the messages." })
-    }
+  // Set up server-sent event stream
+  res.setHeader('Content-Type', 'text/event-stream')
+  res.setHeader('Cache-Control', 'no-cache')
+  res.setHeader('Connection', 'keep-alive')
 
-    return res.json(messages)
+  // Send an initial SSE message to indicate connection is established
+  const initialMessage = `event: connected\ndata: connected\n\n`
+  res.write(initialMessage)
+
+  // Continuously send SSE messages with new messages as they are added to the database
+  const messageStream = Message.find({ userId: { $in: [senderUser._id, recipientUser._id] } }).tailable().stream()
+  messageStream.on('data', message => {
+      const data = `event: newMessage\ndata: ${JSON.stringify(message)}\n\n`
+      res.write(data)
+  })
+  messageStream.on('error', error => {
+      console.error(error)
+      res.end()
+  })
+
+  // When the connection is closed, stop sending SSE messages
+  req.on('close', () => {
+      messageStream.destroy()
+      res.end()
   })
 }
 
