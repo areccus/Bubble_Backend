@@ -6,10 +6,10 @@ import { getMessage, createMessage, getMessagedUsers, createGroupChat } from '..
 const router = express.Router()
 
 router.get('/', verifyToken)
-router.get('/messages', getMessage)
-router.get("/messages/messagedUsers/:userId", getMessagedUsers)
+router.get('/messages', verifyToken, getMessage)
+router.get("/messages/messagedUsers/:userId", verifyToken, getMessagedUsers)
 
-router.post('/messages', createMessage)
-router.post("/groupChats", createGroupChat);
+router.post('/messages', verifyToken, createMessage)
+router.post("/groupChats", verifyToken, createGroupChat);
 
 export default router
