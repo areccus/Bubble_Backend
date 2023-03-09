@@ -3,25 +3,38 @@ import Message from "../models/Message.js"
 import GroupChat from "../models/GroupChat.js"
 
 export const createMessage = async (req, res) => {
-    const {userId, message} = req.body
-    const user = await User.findById(userId)
-    const newMessage = new Message({
-        userId,
-        sender: user.userName,
-        recipient: user.userName,
-        message: message,
-        timestamp: new Date(),
-      })
+  const { message } = req.body;
+  const { sender, recipient } = req.query;
 
-      newMessage.save((err, savedMessage) => {
-        if (err) {
-          console.error(err)
-          return res.status(500).json({ error: 'An error occurred while saving the message.' })
-        }
-    
-        return res.json(savedMessage)
-      })
-}
+  const senderUser = await User.findOne({ userName: sender });
+  const recipientUser = await User.findOne({ userName: recipient });
+
+  if (!senderUser || !recipientUser) {
+    return res.status(404).json({ error: "User not found." });
+  }
+
+  const newMessage = new Message({
+    userId: senderUser._id,
+    sender: senderUser.userName,
+    recipient: recipientUser.userName,
+    message: message,
+    timestamp: new Date(),
+  });
+
+  newMessage.save((err, savedMessage) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "An error occurred while saving the message." });
+    }
+
+    const data = `event: newMessage\ndata: ${JSON.stringify(savedMessage)}\n\n`;
+    // Send SSE message with the new message
+    sse.send(data);
+
+    return res.json(savedMessage);
+  });
+};
+
 
 export const getMessage = async (req, res) => {
   const { sender, recipient } = req.query
@@ -30,7 +43,7 @@ export const getMessage = async (req, res) => {
   const recipientUser = await User.findOne({ userName: recipient })
 
   if (!senderUser || !recipientUser) {
-      return res.status(404).json({ error: "User not found." })
+    return res.status(404).json({ error: "User not found." })
   }
 
   // Set up server-sent event stream
@@ -45,18 +58,22 @@ export const getMessage = async (req, res) => {
   // Continuously send SSE messages with new messages as they are added to the database
   const messageStream = Message.find({ userId: { $in: [senderUser._id, recipientUser._id] } }).tailable().stream()
   messageStream.on('data', message => {
-      const data = `event: newMessage\ndata: ${JSON.stringify(message)}\n\n`
-      res.write(data)
+    const data = `event: newMessage\ndata: ${JSON.stringify({
+      sender: message.sender,
+      recipient: message.recipient,
+      message: message.message
+    })}\n\n`
+    res.write(data)
   })
   messageStream.on('error', error => {
-      console.error(error)
-      res.end()
+    console.error(error)
+    res.end()
   })
 
   // When the connection is closed, stop sending SSE messages
   req.on('close', () => {
-      messageStream.destroy()
-      res.end()
+    messageStream.destroy()
+    res.end()
   })
 }
 
