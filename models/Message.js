@@ -6,7 +6,7 @@ const MessageSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    sender: {
+    userName: {
       type: String,
       required: true
     },
@@ -14,6 +14,7 @@ const MessageSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    picturePath: String,
     message: {
       type: String,
       required: true
