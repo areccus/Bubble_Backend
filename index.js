@@ -13,15 +13,12 @@ import authRoutes from './routes/auth.js'
 import userRoutes from './routes/users.js'
 import postRoutes from './routes/posts.js'
 import chatRoutes from './routes/chat.js'
-import messageRoutes from './routes/messages.js'
 import { verifyToken } from './middleware/auth.js'
 import { createPost} from './controllers/posts.js'
 import User from './models/User.js'
 import Post from './models/Post.js'
-import Message from './models/Message.js'
 import {users, posts} from './data/index.js'
 import { error } from 'console'
-import { messages } from './data/messageTest.js'
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url)
@@ -60,7 +57,6 @@ app.post('/posts', verifyToken, upload.single('picture'), createPost)
 app.use('/auth', authRoutes)
 app.use('/users', userRoutes)
 app.use('/posts', postRoutes)
-app.use('/messages', messageRoutes)
 app.use('/chat', chatRoutes)
 
 /* Mongoose Setup */
