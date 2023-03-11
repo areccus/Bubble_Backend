@@ -67,29 +67,23 @@ export const getMessage = async (req, res) => {
       return;
     }
 
-    const messages = chat.messages;
-    res.status(200).json(messages);
+    // set headers for SSE
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders();
+
+    // listen for new messages and broadcast them to the client
+    messageEmitter.on('newMessage', (newMessage) => {
+      res.write(`data: ${JSON.stringify(newMessage)}\n\n`);
+    });
+
+    // remove event listener when the client closes the connection
+    req.on('close', () => {
+      messageEmitter.off('newMessage');
+      res.end();
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-};
-
-// SSE endpoint for broadcasting new messages to the client
-export const sseMessages = async (req, res) => {
-  // set headers for SSE
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Connection', 'keep-alive');
-  res.flushHeaders();
-
-  // listen for new messages and broadcast them to the client
-  messageEmitter.on('newMessage', (newMessage) => {
-    res.write(`data: ${JSON.stringify(newMessage)}\n\n`);
-  });
-
-  // remove event listener when the client closes the connection
-  req.on('close', () => {
-    messageEmitter.off('newMessage');
-    res.end();
-  });
 };
