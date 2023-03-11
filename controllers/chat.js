@@ -51,4 +51,19 @@ export const postMessage = async (req, res) => {
     }
   };
   
-  export default postMessage
+  export const getMessage = async (req, res) => {
+    try {
+        const { chatId } = req.params;
+    
+        const chat = await Chat.findById(chatId);
+        if (!chat) {
+          res.status(404).json({ message: "Chat not found" });
+          return;
+        }
+    
+        const messages = chat.messages;
+        res.status(200).json(messages);
+      } catch (err) {
+        res.status(500).json({ message: err.message });
+      }
+  }
