@@ -58,32 +58,32 @@ export const postMessage = async (req, res) => {
 };
 
 export const getMessage = async (req, res) => {
-  try {
-    const { chatId } = req.params;
-
-    const chat = await Chat.findById(chatId);
-    if (!chat) {
-      res.status(404).json({ message: "Chat not found" });
-      return;
+    try {
+      const { chatId } = req.params;
+  
+      const chat = await Chat.findById(chatId);
+      if (!chat) {
+        res.status(404).json({ message: "Chat not found" });
+        return;
+      }
+  
+      // set headers for SSE
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Connection', 'keep-alive');
+      res.flushHeaders();
+  
+      // listen for new messages and send them to the client
+      chat.on('newMessage', (newMessage) => {
+        res.write(`data: ${JSON.stringify(newMessage)}\n\n`);
+      });
+  
+      // remove event listener when the client closes the connection
+      req.on('close', () => {
+        chat.off('newMessage');
+        res.end();
+      });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
     }
-
-    // set headers for SSE
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders();
-
-    // listen for new messages and broadcast them to the client
-    messageEmitter.on('newMessage', (newMessage) => {
-      res.write(`data: ${JSON.stringify(newMessage)}\n\n`);
-    });
-
-    // remove event listener when the client closes the connection
-    req.on('close', () => {
-      messageEmitter.off('newMessage');
-      res.end();
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
   }
-};
