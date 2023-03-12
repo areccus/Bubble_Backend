@@ -71,3 +71,14 @@ export const getMessage = async (req, res) => {
       res.status(500).json({ message: err.message });
     }
   }
+
+export const getChats = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const chats = await Chat.find({ users: { $in: [userId] } }).populate('users', 'name email avatar');
+    res.json(chats);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+}
