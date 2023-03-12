@@ -4,7 +4,8 @@ import User from "../models/User.js";
 /* CREATE */
 export const createPost = async (req, res) => {
   try {
-    const { userId, description, picturePath } = req.body
+    const { userId, description } = req.body
+    const picturePath = req.file.filename
     const user = await User.findById(userId)
     const newPost = new Post({
       userId,
@@ -20,12 +21,21 @@ export const createPost = async (req, res) => {
     })
     await newPost.save()
 
+    // Move uploaded file to public/assets folder
+    fs.rename(req.file.path, `public/assets/${req.file.filename}`, function (err) {
+      if (err) {
+        console.log(`Error moving file: ${err}`)
+      } else {
+        console.log('File moved successfully')
+      }
+    })
+
     const post = await Post.find()
     res.status(201).json(post)
   } catch (err) {
     res.status(409).json({ message: err.message })
   }
-};
+}
 
 /* READ */
 export const getFeedPosts = async (req, res) => {
