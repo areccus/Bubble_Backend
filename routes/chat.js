@@ -8,6 +8,6 @@ router.get('/', verifyToken)
 router.post('/:chatId', verifyToken, createChat)
 router.post('/:chatId/messages', verifyToken, postMessage)
 router.get('/:chatId/messages', verifyToken, getMessage)
-router.get('/chats/:userId', verifyToken, getChats)
+router.get('/chats/user/:userId', verifyToken, getChats)
 
 export default router
