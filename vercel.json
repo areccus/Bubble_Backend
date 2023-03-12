@@ -3,7 +3,22 @@
     "builds": [
       {
         "src": "index.js",
-        "use": "@vercel/node"
+        "use": "@vercel/node",
+        "env": {
+          "STORAGE_TYPE": "local",
+          "STORAGE_PATH": "/tmp/uploads",
+          "STORAGE_URL": "/uploads"
+        },
+        "fs": {
+          "include": [
+            "public/assets"
+          ],
+          "exclude": [
+            "tmp/**/*",
+            "build/**/*",
+            "public/uploads/**/*"
+          ]
+        }
       }
     ],
     "routes": [
@@ -11,11 +26,5 @@
         "src": "/(.*)",
         "dest": "/"
       }
-    ],
-    "functions": {
-      "api/**/*.js": {
-        "memory": 1024,
-        "maxDuration": 10
-      }
-    }
+    ]
   }
