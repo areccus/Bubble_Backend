@@ -74,20 +74,12 @@ export const getMessage = async (req, res) => {
 
 export const getChats = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const { userId } = req.params;
     const chats = await Chat.find({ users: { $in: [userId] } })
-      .populate('users', 'name avatar')
-      .populate({
-        path: 'messages',
-        options: { sort: { createdAt: -1 }, limit: 1 },
-        populate: { path: 'userId', select: 'name' },
-      });
-    const chatData = chats.map((chat) => ({
-      chatId: chat._id,
-      name: chat.users.find((user) => user._id != userId).name,
-      lastMessage: chat.messages[0] ? chat.messages[0].message : '',
-    }));
-    res.json(chatData);
+      .populate('users', 'name email avatar')
+      .sort({ updatedAt: 'desc' });
+
+    res.json(chats);
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
