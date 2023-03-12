@@ -1,30 +1,15 @@
 {
     "version": 2,
     "builds": [
-      {
-        "src": "index.js",
-        "use": "@vercel/node",
-        "env": {
-          "STORAGE_TYPE": "local",
-          "STORAGE_PATH": "/tmp/uploads",
-          "STORAGE_URL": "/uploads"
-        },
-        "fs": {
-          "include": [
-            "public/assets"
-          ],
-          "exclude": [
-            "tmp/**/*",
-            "build/**/*",
-            "public/uploads/**/*"
-          ]
+        {
+            "src": "index.js",
+            "use": "@vercel/node"
         }
-      }
     ],
     "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/"
-      }
+        {
+            "src": "/(.*)",
+            "dest": "/"
+        }
     ]
-  }
+}
