@@ -74,19 +74,11 @@ export const getMessage = async (req, res) => {
 
 export const getChats = async (req, res) => {
   try {
-    const chats = await Chat.find({ members: req.params.userId })
-      .sort({ updatedAt: 'desc' })
-      .populate({
-        path: 'users',
-        select: 'name email avatar',
-      })
-      .populate({
-        path: 'messages.userId',
-        select: 'name avatar',
-      });
-    res.json(chats);
+    const { userId } = req.params;
+    const chats = await Chat.find({ members: userId }).sort({ updatedAt: 'desc' });
+    res.status(200).json(chats);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 }
