@@ -13,6 +13,6 @@
       }
     ],
     "fs": {
-      "public": "write"
+        "public/assets": "write"
     }
   }
