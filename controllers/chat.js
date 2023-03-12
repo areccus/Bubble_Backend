@@ -74,11 +74,8 @@ export const getMessage = async (req, res) => {
 
 export const getChats = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const chats = await Chat.find({ users: { $in: [userId] } })
-      .populate('users', 'name email avatar')
-      .sort({ updatedAt: 'desc' });
-
+    const userId = req.params.userId;
+    const chats = await Chat.find({ members: { $in: [userId] } }).populate('members', 'name email avatar');
     res.json(chats);
   } catch (error) {
     console.error(error);
