@@ -71,7 +71,6 @@ mongoose.connect(process.env.MONGO_URL, {
     // User.insertMany(users)
     // Post.insertMany(posts)
     // Message.insertMany(messages)
-    //Here for something
 
 }).catch((err) => 
     console.log(`${error} did not connect`)
