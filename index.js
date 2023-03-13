@@ -32,16 +32,17 @@ app.use(morgan('common'))
 app.use(bodyParser.json({limit: '30mb', extended: true}))
 app.use(bodyParser.urlencoded({limit: '30mb', extended: true}))
 app.use(cors())
-app.use('/assets', express.static(path.join(__dirname, 'public/assets')))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 /* FILE STORAGE */
 const storage = multer.diskStorage({
+    // Saves your files to this folder.
     destination: function (req, file, cb) {
-        cb(null, '/tmp')
+        cb(null, 'uploads/')
     },
+    // Creates the file name by using the original file name.
     filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        cb(null, file.fieldname + '-' + uniqueSuffix + '.jpg')
+        cb(null, file.originalname)
     }
 })
 
@@ -50,7 +51,7 @@ const upload = multer({storage})
 
 /* Routes with files */
 app.post('/auth/register', upload.single('picture'), register)
-// app.post('/posts', verifyToken, upload.single('picture'), createPost)
+app.post('/posts', verifyToken, upload.single('picture'), createPost)
 
 /* ROUTES */
 app.use('/auth', authRoutes)
