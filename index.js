@@ -32,13 +32,13 @@ app.use(morgan('common'))
 app.use(bodyParser.json({limit: '30mb', extended: true}))
 app.use(bodyParser.urlencoded({limit: '30mb', extended: true}))
 app.use(cors())
-app.use('/uploads', express.static(path.join(__dirname, 'uploads/assets')))
+app.use('/assets', express.static(path.join(__dirname, 'public/assets')))
 
 /* FILE STORAGE */
 const storage = multer.diskStorage({
     // Saves your files to this folder.
     destination: function (req, file, cb) {
-        cb(null, 'uploads/assets')
+        cb(null, 'public/assets')
     },
     // Creates the file name by using the original file name.
     filename: function (req, file, cb) {
