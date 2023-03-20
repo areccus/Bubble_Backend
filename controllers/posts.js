@@ -6,10 +6,7 @@ export const createPost = async (req, res) => {
   try {
     const { userId, description } = req.body
     const user = await User.findById(userId)
-
-    // Get the public URL of the uploaded file
-    const picturePath = req.file.publicUrl
-
+    const picturePath = req.file ? req.file.path : null; // Get the picture path from req.file
     const newPost = new Post({
       userId,
       userName: user.userName,
@@ -30,6 +27,7 @@ export const createPost = async (req, res) => {
     res.status(409).json({ message: err.message })
   }
 }
+
 
 /* READ */
 export const getFeedPosts = async (req, res) => {
