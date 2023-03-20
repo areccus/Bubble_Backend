@@ -15,6 +15,8 @@ import postRoutes from './routes/posts.js'
 import chatRoutes from './routes/chat.js'
 import { verifyToken } from './middleware/auth.js'
 import { createPost} from './controllers/posts.js'
+import { Storage } from '@google-cloud/storage'
+import multerGoogleStorage from 'multer-google-storage'
 import User from './models/User.js'
 import Post from './models/Post.js'
 import {users, posts} from './data/index.js'
@@ -35,19 +37,21 @@ app.use(cors())
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')))
 
 /* FILE STORAGE */
-const storage = multer.diskStorage({
-    // Saves your files to this folder.
-    destination: function (req, file, cb) {
-        cb(null, 'public/assets')
-    },
-    // Creates the file name by using the original file name.
-    filename: function (req, file, cb) {
-        cb(null, file.originalname)
-    }
-})
+const storage = new Storage({ keyFilename: process.env.GCLOUD_STORAGE_KEYFILE })
+const bucketName = 'bubble_storage'
+const bucket = storage.bucket(bucketName)
 
 //Anytime we need to upload we would use the multer storage we made.
-const upload = multer({storage})
+const upload = multer({
+    storage: multerGoogleStorage.storageEngine({
+      projectId: 'gifted-fragment-380514', // Replace with your GCS project ID
+      keyFilename: process.env.GCLOUD_STORAGE_KEYFILE,
+      bucket: bucketName,
+      filename: (req, file, cb) => {
+        cb(null, file.originalname);
+      },
+    }),
+  })
 
 /* Routes with files */
 app.post('/auth/register', upload.single('picture'), register)

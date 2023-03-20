@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "gifted-fragment-380514",
+  "private_key_id": "c37ec8afc5b41ea0142ac10c2dd256c3bbc0715b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDPj0UNUujlPzFf\n5RVl0QBdqOl/w6aeYfBkvsy+qlsan/cFn+Tx+Zvm/itkmZdU4t27IBxMOPkrWMiU\npcqkyvySxhg+54TL4Y0UvoorVsl+/tVmcHPdrv4Butg0Y7QLB17SaXKKR9x90II0\nfiAzfI3yn69Y35x2T+jTlD8SfwmEC0xOXmMmb6WD0AB3RblTfaWf+Yhte3nAoZG5\n4NNXZc0iXlkdUsEhUe4NiQI/iAo69RyO+iIuOx3U5LedIOTkGpRHYtG2NIJr64cW\ngCjcG98RGg6b7QJkQJWtpVwJS5V15kYgDta5o0Ip/SqAEL5ZXw8ZM+06Vmz9Y8dV\nzdgOOCHNAgMBAAECggEAENxkG8wk6Yk5IxTyfeC9EAlf3TD7xjj8NMrqdKtVFvQb\nYS8XLkWnJwbLEp3cKm6lhtp5wgK3fGXMIYXYUOEWedEyzgVeXHZC+4ZA+3qjiA1T\n25b9/+pZGF3hILG1bKyZb4FWZypQRz4wHZXeBXYJopswkjPUENO2p7K5bvC39AHA\nopHIh51AjY+JirCylj8839LOyoQgXsDp6twNW7hVZG9r5LqB7naIQHF90a+Odbvj\neh56Fd6432Lt1T4aUQ6/aGiTdDPcMV3T8AEJO0fZFZYzPRnaKahTPhwMQR5Ixae/\nLLbrDmk3MEoJkaZC9x7aA098i3WohuIgdwcAIp4GcQKBgQD/bVQU8g2m83faSIDr\nVvJKzwGR6jjkYpfI4kM6pjNbYL8nGzP285Ez2WPypAZ8Ke3BGiSBIRVMkIpJLklb\nIwPwKOIpfk6Me/V40zuvah1emxdR2u/EwElcxUHDenKHomhk8ePfF8hWrbl+paNl\nKnrxv+ScmvZYl+ztFZU9E3FT+QKBgQDQBnRvC0WjzZvv3fUTyyMC1Sa8nCwkFVO7\nZ7rScivsYLru12iwkQcErGtZfZQoNxRtKNhogo7feJmOqokNLDI2PGWHAoQgoGLs\nTF96rBoRw0+L6I0j9EsawNENrbunp7Fa/8rzh3WGxx1k2IUW0pdpX1xSMByDED/F\nC7J8l4EJdQKBgHoLcQt5BJDq8C96SS8poiegdW2U7o4hlcjEY78YPp3AwlUbKF8s\nzgpqKtl7CiY1moaTyTFx701gGtMQrLhBKNaNklKlKT7y071hoLkWCOZ1UFUqOTpX\nbjZHgj62uRaZwSvKcEjegjj4VRNwbXwfKhNszv0NBfway3gUwfQm4BVxAoGBAKhA\nwEXcWRwuvfRZktLKl2vAGQ+uRSl+MnY+ZOW3wHz0k92ATsWY15NZHY6JOp74RcYw\npjCJgKOQ+Kpilm0YFRi26uszBskY0EoNT6B5uLArR5iCpD2zZleiIrQsk737rUBL\n6cvlARLc05JwadzWwe5RWeuDzFvZdaqbVmbdZ1nNAoGBAPucv53MCmm8OTdqqchl\nvduCmnYQ8CA5iZD0POQxpM1gBLrKygEGedYlO/XxmKxBJYR5Acenl3KYeoywQE0a\nfLwtCCyJ7lklI5mMK7VSGZwynBRCfx9CP4J6HbTfPIYjhvcV4FXPCHltmTAfvq89\nT1G0gRS3fGHKcLJlVuA75cRI\n-----END PRIVATE KEY-----\n",
+  "client_email": "bubble-storage@gifted-fragment-380514.iam.gserviceaccount.com",
+  "client_id": "107621973330043383986",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/bubble-storage%40gifted-fragment-380514.iam.gserviceaccount.com"
+}
