@@ -39,7 +39,7 @@ app.use('/assets', express.static(path.join(__dirname, 'public/assets')))
 
 /* FILE STORAGE */
 config()
-const storage = new Storage({ keyFilename: process.env.GCLOUD_STORAGE_KEYFILE })
+const storage = new Storage({ keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS })
 const bucketName = 'bubble_storage'
 const bucket = storage.bucket(bucketName)
 
@@ -47,7 +47,7 @@ const bucket = storage.bucket(bucketName)
 const upload = multer({
     storage: multerGoogleStorage.storageEngine({
       projectId: 'gifted-fragment-380514', // Replace with your GCS project ID
-      keyFilename: process.env.GCLOUD_STORAGE_KEYFILE,
+      keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
       bucket: bucketName,
       filename: (req, file, cb) => {
         cb(null, file.originalname);
