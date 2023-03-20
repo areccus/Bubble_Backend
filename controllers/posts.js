@@ -4,8 +4,12 @@ import User from "../models/User.js";
 /* CREATE */
 export const createPost = async (req, res) => {
   try {
-    const { userId, description, picturePath } = req.body
+    const { userId, description } = req.body
     const user = await User.findById(userId)
+
+    // Get the public URL of the uploaded file
+    const picturePath = req.file.publicUrl
+
     const newPost = new Post({
       userId,
       userName: user.userName,
@@ -25,7 +29,7 @@ export const createPost = async (req, res) => {
   } catch (err) {
     res.status(409).json({ message: err.message })
   }
-};
+}
 
 /* READ */
 export const getFeedPosts = async (req, res) => {
