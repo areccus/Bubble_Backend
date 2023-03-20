@@ -17,6 +17,7 @@ import { verifyToken } from './middleware/auth.js'
 import { createPost} from './controllers/posts.js'
 import { Storage } from '@google-cloud/storage'
 import multerGoogleStorage from 'multer-google-storage'
+import { config } from 'dotenv'
 import User from './models/User.js'
 import Post from './models/Post.js'
 import {users, posts} from './data/index.js'
@@ -37,6 +38,7 @@ app.use(cors())
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')))
 
 /* FILE STORAGE */
+config()
 const storage = new Storage({ keyFilename: process.env.GCLOUD_STORAGE_KEYFILE })
 const bucketName = 'bubble_storage'
 const bucket = storage.bucket(bucketName)
