@@ -65,6 +65,7 @@ app.use('/users', userRoutes)
 app.use('/posts', postRoutes)
 app.use('/chat', chatRoutes)
 
+// Just to push news
 /* Mongoose Setup */
 const PORT = process.env.PORT || 6001
 mongoose.set('strictQuery', false)
