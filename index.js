@@ -46,15 +46,13 @@ if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
 const serviceAccountJSON = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS)
 const projectId = serviceAccountJSON.project_id
 
-const storage = new Storage({ credentials: serviceAccountJSON })
 const bucketName = 'bubble_storage'
 
 //Anytime we need to upload we would use the multer storage we made.
 const upload = multer({
     storage: multerGoogleStorage.storageEngine({
       projectId: projectId, // Replace with your GCS project ID
-      keyFilename: serviceAccountJSON,
-      credentials: serviceAccountJSON,
+      keyFilename: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS),
       bucket: bucketName,
       filename: (req, file, cb) => {
         cb(null, file.originalname);
