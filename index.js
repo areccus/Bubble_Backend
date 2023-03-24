@@ -38,20 +38,28 @@ app.use(cors())
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')))
 
 /* FILE STORAGE */
-config()
-const storage = new Storage({ keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS })
+
+if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+    throw new Error('GOOGLE_APPLICATION_CREDENTIALS_JSON environment variable is missing');
+  }
+  
+const serviceAccountJSON = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS)
+const projectId = serviceAccountJSON.project_id
+
+const storage = new Storage({ credentials: serviceAccountJSON })
 const bucketName = 'bubble_storage'
-const bucket = storage.bucket(bucketName)
 
 //Anytime we need to upload we would use the multer storage we made.
 const upload = multer({
     storage: multerGoogleStorage.storageEngine({
-      projectId: 'gifted-fragment-380514', // Replace with your GCS project ID
-      keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+      projectId: projectId, // Replace with your GCS project ID
+      keyFilename: serviceAccountJSON,
+      credentials: serviceAccountJSON,
       bucket: bucketName,
       filename: (req, file, cb) => {
         cb(null, file.originalname);
       },
+      acl: 'publicRead'
     }),
   })
 
