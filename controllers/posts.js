@@ -6,7 +6,7 @@ export const createPost = async (req, res) => {
   try {
     const { userId, description } = req.body
     const user = await User.findById(userId)
-    const picturePath = req.file ? req.file.path : null; // Get the picture path from req.file
+    const picturePath = req.file ? `https://storage.googleapis.com/${bucketName}/${req.file.originalname}` : null;
     const newPost = new Post({
       userId,
       userName: user.userName,
