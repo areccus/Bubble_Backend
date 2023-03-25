@@ -11,6 +11,5 @@ router.get('/:userId/posts', verifyToken, getUserPosts)
 /* UPDATE */
 router.patch('/:id/like', verifyToken, likePost)
 
-router.post('/posts', verifyToken, createPost)
 
 export default router
