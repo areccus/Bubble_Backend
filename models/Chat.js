@@ -2,8 +2,15 @@ import mongoose from "mongoose"
 
 const chatSchema = new mongoose.Schema({
     members: [{
-      type: String,
-      required: true
+      userId: {
+        type: String,
+        required: true
+      },
+      userName: {
+        type: String,
+        required: true
+      },
+      userPicturePath: String
     }],
     messages: [{
       userId: {

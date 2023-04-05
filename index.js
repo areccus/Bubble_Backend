@@ -1,3 +1,5 @@
+// AT SOME POINT I NEED TO SWITCH THE MESSAGE SCHEMA TO HAVE THE WHOLE USER OBJECT IN MEMBERS
+
 import express from 'express'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
