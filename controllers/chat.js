@@ -75,7 +75,7 @@ export const getMessage = async (req, res) => {
 export const getChats = async (req, res) => {
   try {
     const { userId } = req.params;
-    const chats = await Chat.find({ members: userId }).sort({ updatedAt: 'desc' });
+    const chats = await Chat.find({ 'members.userId': userId }).sort({ updatedAt: 'desc' });
     res.status(200).json(chats);
   } catch (error) {
     console.error(error);
